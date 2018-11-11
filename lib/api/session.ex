@@ -1,0 +1,52 @@
+defmodule DetectinoPanel.Api.Session do
+  @moduledoc false
+
+  @otp_app :detectino_panel
+
+  @login_path "/api/login"
+
+  def login(opts \\ []) do
+    config = Application.get_env(@otp_app, :detectino_api)
+    username = opts[:username] || Keyword.get(config, :username)
+    password = opts[:password] || Keyword.get(config, :password)
+
+    payload = %{user: %{username: username, password: password}}
+
+    with {:op, {:ok, response}} <- {:op, do_post(@login_path, payload, opts)},
+         {:dec, {:ok, token}} <- {:dec, extract_token(response)} do
+      {:ok, token}
+    else
+      {:op, err} -> err
+      {:dec, _} -> {:error, :response}
+    end
+  end
+
+  defp extract_token(%HTTPoison.Response{body: body}) do
+    with {:ok, json} <- Jason.decode(body) do
+      {:ok, Map.get(json, "token")}
+    end
+  end
+
+  defp do_post(path, payload, opts) do
+    path
+    |> url(opts)
+    |> HTTPoison.post(
+      Jason.encode!(payload),
+      [
+        {"Content-Type", "application/json"}
+      ]
+    )
+    |> parse_response()
+  end
+
+  defp parse_response({:ok, %{status_code: 200}} = response), do: response
+  defp parse_response({:ok, %{status_code: 401}}), do: {:error, :unauthorized}
+  defp parse_response(_), do: {:error, :transport}
+
+  defp url(path, opts) do
+    server =
+      opts[:server] || @otp_app |> Application.get_env(:detectino_api) |> Keyword.get(:server)
+
+    "#{server}#{path}"
+  end
+end
