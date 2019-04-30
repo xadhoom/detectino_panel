@@ -35,7 +35,8 @@ defmodule DetectinoPanel.Components.Background do
     # so use the runtime one, the hash will ensure that the file is the same
     {:ok, _hash} = Scenic.Cache.Support.File.read(path, @sea_hash)
 
-    Texture.load(path, @sea_hash)
+    # TODO: should not be needed to be global
+    Texture.load(path, @sea_hash, scope: :global)
 
     {:ok, @graph, push: @graph}
   end
