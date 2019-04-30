@@ -65,11 +65,11 @@ defmodule DetectinoPanel.MixProject do
       # dev and debug stuff
       {:observer_cli, "~> 1.4"},
       # TODO fix once bypass and cowboy settles
-      {:bypass, "~> 0.9", only: :test},
-      {:plug_cowboy, "~> 1.0", only: :test},
-      {:cowboy, "~> 1.0", only: :test},
+      {:bypass, "~> 1.0", only: :test},
+      {:plug_cowboy, "~> 2.0", only: :test},
+      {:cowboy, "~> 2.0", only: :test},
       # eof TODO
-      {:credo, "~> 0.10", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.10", only: :test}
     ] ++ deps(@target)
   end

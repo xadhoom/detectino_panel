@@ -21,9 +21,7 @@ defmodule DetectinoPanel.Scene.Default do
   end
 
   def init(_, _) do
-    push_graph(@graph)
-
-    {:ok, %{graph: @graph}}
+    {:ok, %{graph: @graph}, push: @graph}
   end
 
   def handle_cast({:blank}, state) do
@@ -31,14 +29,10 @@ defmodule DetectinoPanel.Scene.Default do
       Graph.build()
       |> MyComponents.blank([], id: :blank)
 
-    push_graph(g)
-
-    {:noreply, %{state | graph: g}}
+    {:noreply, %{state | graph: g}, push: g}
   end
 
   def filter_event({:blank_click}, _, state) do
-    push_graph(@graph)
-
-    {:stop, %{state | graph: @graph}}
+    {:halt, %{state | graph: @graph}, push: @graph}
   end
 end

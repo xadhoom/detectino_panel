@@ -19,9 +19,7 @@ defmodule DetectinoPanel.Components.PinInput do
   def init(_, opts) when is_list(opts) do
     id = opts[:id]
 
-    push_graph(@graph)
-
-    {:ok, %{id: id, graph: @graph, selection: ""}}
+    {:ok, %{id: id, graph: @graph, selection: ""}, push: @graph}
   end
 
   def filter_event({:keypad_click, x}, _, %{graph: g} = state)
@@ -31,27 +29,22 @@ defmodule DetectinoPanel.Components.PinInput do
     g =
       case has_input?(g) do
         false ->
-          g = g |> add_input(new_selection)
-          push_graph(g)
-          g
+          g |> add_input(new_selection)
 
         true ->
-          g = g |> edit_input(new_selection)
-          push_graph(g)
-          g
+          g |> edit_input(new_selection)
       end
 
-    {:stop, %{state | graph: g, selection: new_selection}}
+    {:halt, %{state | graph: g, selection: new_selection}, push: g}
   end
 
   def filter_event({:keypad_click, :cancel}, _, %{graph: g} = state) do
     case has_input?(g) do
       true ->
-        push_graph(@graph)
-        {:stop, %{state | graph: @graph, selection: ""}}
+        {:halt, %{state | graph: @graph, selection: ""}, push: @graph}
 
       false ->
-        {:stop, state}
+        {:halt, state}
     end
   end
 

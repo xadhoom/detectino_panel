@@ -40,9 +40,7 @@ defmodule DetectinoPanel.Components.Keypad.Button do
       id: id
     }
 
-    push_graph(graph)
-
-    {:ok, state}
+    {:ok, state, push: graph}
   end
 
   @doc false
@@ -53,11 +51,11 @@ defmodule DetectinoPanel.Components.Keypad.Button do
       state
       |> Map.put(:pressed, true)
 
-    update_color(state)
+    g = update_color(state)
 
     ViewPort.capture_input(context, [:cursor_button, :cursor_pos])
 
-    {:noreply, state}
+    {:noreply, state, push: g}
   end
 
   @doc false
@@ -67,7 +65,7 @@ defmodule DetectinoPanel.Components.Keypad.Button do
         %{pressed: pressed, id: id} = state
       ) do
     state = Map.put(state, :pressed, false)
-    update_color(state)
+    g = update_color(state)
 
     ViewPort.release_input(context, [:cursor_button, :cursor_pos])
 
@@ -75,7 +73,7 @@ defmodule DetectinoPanel.Components.Keypad.Button do
       send_event({:click, id})
     end
 
-    {:noreply, state}
+    {:noreply, state, push: g}
   end
 
   @doc false
@@ -89,7 +87,6 @@ defmodule DetectinoPanel.Components.Keypad.Button do
       p
       |> Primitive.put_style(:fill, @color)
     end)
-    |> push_graph()
   end
 
   defp update_color(%{graph: graph, pressed: true}) do
@@ -98,7 +95,6 @@ defmodule DetectinoPanel.Components.Keypad.Button do
       p
       |> Primitive.put_style(:fill, @pressed_color)
     end)
-    |> push_graph()
   end
 
   defp add_text(g, n, {w, h}) do

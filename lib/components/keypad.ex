@@ -50,25 +50,23 @@ defmodule DetectinoPanel.Components.Keypad do
         {g, x, y}
       end)
 
-    push_graph(g)
-
-    {:ok, %{id: id, graph: g}}
+    {:ok, %{id: id, graph: g}, push: g}
   end
 
   def filter_event({:click, :keypad_10}, _, state) do
-    {:continue, {:keypad_click, :cancel}, state}
+    {:cont, {:keypad_click, :cancel}, state}
   end
 
   def filter_event({:click, :keypad_11}, _, state) do
-    {:continue, {:keypad_click, 0}, state}
+    {:cont, {:keypad_click, 0}, state}
   end
 
   def filter_event({:click, :keypad_12}, _, state) do
-    {:continue, {:keypad_click, :confirm}, state}
+    {:cont, {:keypad_click, :confirm}, state}
   end
 
   def filter_event({:click, id}, _, state) do
     "keypad_" <> id = Atom.to_string(id)
-    {:continue, {:keypad_click, String.to_integer(id)}, state}
+    {:cont, {:keypad_click, String.to_integer(id)}, state}
   end
 end

@@ -2,6 +2,7 @@ defmodule DetectinoPanel.Components.Background do
   @moduledoc false
   use Scenic.Component
 
+  alias Scenic.Cache.Static.Texture
   alias Scenic.Graph
 
   import Scenic.Primitives, only: [{:rect, 3}]
@@ -10,7 +11,7 @@ defmodule DetectinoPanel.Components.Background do
 
   @sea_path :code.priv_dir(:detectino_panel)
             |> Path.join("/static/images/sea.png")
-  @sea_hash Scenic.Cache.Hash.file!(@sea_path, :sha)
+  @sea_hash Scenic.Cache.Support.Hash.file!(@sea_path, :sha)
 
   @sea_width 800
   @sea_height 480
@@ -32,10 +33,10 @@ defmodule DetectinoPanel.Components.Background do
 
     # cannot use compile time path because it will change from developer dir
     # so use the runtime one, the hash will ensure that the file is the same
-    {:ok, _hash} = Scenic.Cache.File.load(path, @sea_hash)
+    {:ok, _hash} = Scenic.Cache.Support.File.read(path, @sea_hash)
 
-    push_graph(@graph)
+    Texture.load(path, @sea_hash)
 
-    {:ok, @graph}
+    {:ok, @graph, push: @graph}
   end
 end

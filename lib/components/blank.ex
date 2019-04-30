@@ -20,9 +20,7 @@ defmodule DetectinoPanel.Components.Blank do
   def verify(_), do: :invalid_data
 
   def init(_, _) do
-    push_graph(@graph)
-
-    {:ok, @graph}
+    {:ok, @graph, push: @graph}
   end
 
   @doc false
