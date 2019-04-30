@@ -51,13 +51,13 @@ defmodule DetectinoPanel.Components.PinInput do
   def filter_event({:keypad_click, :confirm} = ev, _, %{selection: sel} = state) do
     Logger.debug(sel)
 
-    {:continue, ev, state}
+    {:cont, ev, state}
   end
 
   def filter_event(ev, _, %{graph: g} = state) do
     case has_input?(g) do
-      true -> {:continue, ev, state}
-      false -> {:stop, state}
+      true -> {:cont, ev, state}
+      false -> {:halt, state}
     end
   end
 
