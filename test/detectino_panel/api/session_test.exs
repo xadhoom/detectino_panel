@@ -42,7 +42,7 @@ defmodule DetectinoPanel.Api.SessionTest do
     assert {:error, :unauthorized} = Session.login(server: endpoint_url(bypass.port))
   end
 
-  test "no server response", %{bypass: bypass} do
+  test "no server response", %{bypass: _bypass} do
     assert {:error, :transport} = Session.login(server: endpoint_url(42))
   end
 

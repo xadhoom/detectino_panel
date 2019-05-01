@@ -110,7 +110,7 @@ defmodule DetectinoPanel.Api.Websocket do
     {:ok, state}
   end
 
-  def handle_message(topic, event, payload, _transport, state) do
+  def handle_message(_topic, _event, _payload, _transport, state) do
     # Logger.debug("#{topic} event #{event}: #{inspect(payload)}")
 
     {:ok, state}
