@@ -48,10 +48,10 @@ defmodule DetectinoPanel.Components.PinInput do
     end
   end
 
-  def filter_event({:keypad_click, :confirm} = ev, _, %{selection: sel} = state) do
+  def filter_event({:keypad_click, :confirm} = _ev, _, %{selection: sel} = state) do
     Logger.debug(sel)
 
-    {:cont, ev, state}
+    {:cont, {:keypad_click, :confirm, sel}, %{state | graph: @graph, selection: ""}, push: @graph}
   end
 
   def filter_event(ev, _, %{graph: g} = state) do

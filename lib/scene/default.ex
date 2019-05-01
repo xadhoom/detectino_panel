@@ -35,4 +35,10 @@ defmodule DetectinoPanel.Scene.Default do
   def filter_event({:blank_click}, _, state) do
     {:halt, %{state | graph: @graph}, push: @graph}
   end
+
+  def filter_event({:keypad_click, :confirm, pin}, _, state) do
+    Logger.info("Inserted PIN: #{pin}")
+
+    {:halt, %{state | graph: @graph}, push: @graph}
+  end
 end
