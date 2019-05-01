@@ -10,6 +10,8 @@ defmodule DetectinoPanel.Api.AuthWorker do
 
   require Logger
 
+  @refresh_timer 15_000
+
   defmodule State do
     @moduledoc false
 
@@ -32,12 +34,26 @@ defmodule DetectinoPanel.Api.AuthWorker do
     case Session.login() do
       {:ok, token} ->
         start_socket(token)
+        schedule_refresh_token()
         {:noreply, %{state | token: token}}
 
       err ->
         Logger.error("Got login error #{inspect(err)}, bailing out...")
         {:stop, :normal, state}
     end
+  end
+
+  def handle_info({:refresh}, %{token: token} = state) do
+    {:ok, token} = Session.refresh(token)
+
+    Logger.debug("Token refreshed")
+    schedule_refresh_token()
+
+    {:noreply, %{state | token: token}}
+  end
+
+  defp schedule_refresh_token do
+    Process.send_after(self(), {:refresh}, @refresh_timer)
   end
 
   defp start_socket(token) do
