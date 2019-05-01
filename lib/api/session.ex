@@ -4,6 +4,7 @@ defmodule DetectinoPanel.Api.Session do
   @otp_app :detectino_panel
 
   @login_path "/api/login"
+  @refresh_path "/api/login/refresh"
 
   def login(opts \\ []) do
     config = Application.get_env(@otp_app, :detectino_api)
@@ -21,22 +22,42 @@ defmodule DetectinoPanel.Api.Session do
     end
   end
 
+  @spec refresh(String.t()) :: {:ok, String.t()} | {:error, atom}
+  def refresh(token, opts \\ []) do
+    hdrs = %{"Authorization" => token}
+
+    with {:op, {:ok, response}} <- {:op, do_post(@refresh_path, %{}, opts, hdrs)},
+         {:dec, {:ok, token}} <- {:dec, extract_token(response)} do
+      {:ok, token}
+    else
+      {:op, err} -> err
+      {:dec, _} -> {:error, :response}
+    end
+  end
+
   defp extract_token(%HTTPoison.Response{body: body}) do
     with {:ok, json} <- Jason.decode(body) do
       {:ok, Map.get(json, "token")}
     end
   end
 
-  defp do_post(path, payload, opts) do
+  defp do_post(path, payload, opts, headers \\ %{}) do
+    headers = Map.put(headers, "Content-Type", "application/json")
+
     path
     |> url(opts)
     |> HTTPoison.post(
       Jason.encode!(payload),
-      [
-        {"Content-Type", "application/json"}
-      ]
+      build_headers(headers)
     )
     |> parse_response()
+  end
+
+  defp build_headers(hdrs_map) do
+    hdrs_map
+    |> Enum.map(fn {_k, _v} = hdr ->
+      hdr
+    end)
   end
 
   defp parse_response({:ok, %{status_code: 200}} = response), do: response
