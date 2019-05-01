@@ -64,13 +64,10 @@ defmodule DetectinoPanel.MixProject do
       {:poison, "~> 3.0"},
       # dev and debug stuff
       {:observer_cli, "~> 1.4"},
-      # TODO fix once bypass and cowboy settles
       {:bypass, "~> 1.0", only: :test},
-      {:plug_cowboy, "~> 2.0", only: :test},
-      {:cowboy, "~> 2.0", only: :test},
-      # eof TODO
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false}
     ] ++ deps(@target)
   end
 
