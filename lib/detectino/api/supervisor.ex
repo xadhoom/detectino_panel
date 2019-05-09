@@ -2,7 +2,7 @@ defmodule Detectino.Api.Supervisor do
   @moduledoc false
   use Supervisor
 
-  alias Detectino.Api.AuthWorker
+  alias Detectino.Api.{AuthWorker, PinWorker}
 
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
@@ -24,7 +24,9 @@ defmodule Detectino.Api.Supervisor do
   @impl true
   def init(_args) do
     children = [
-      {AuthWorker, []}
+      {Registry, keys: :unique, name: Registry.DetectinoApi},
+      {AuthWorker, []},
+      {PinWorker, []}
     ]
 
     Supervisor.init(children, strategy: :one_for_all, max_restarts: 5, max_seconds: 3)

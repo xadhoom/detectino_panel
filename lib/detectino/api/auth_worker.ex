@@ -22,12 +22,20 @@ defmodule Detectino.Api.AuthWorker do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
 
+  def get_token do
+    GenServer.call(__MODULE__, :get_token)
+  end
+
   def init(_) do
     Logger.info("Started auth worker")
 
     Process.send_after(self(), {:perform_auth}, 1000)
 
     {:ok, %State{}}
+  end
+
+  def handle_call(:get_token, _from, %{token: token} = state) do
+    {:reply, token, state}
   end
 
   def handle_info({:perform_auth}, state) do
