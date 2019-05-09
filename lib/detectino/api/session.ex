@@ -1,4 +1,4 @@
-defmodule DetectinoPanel.Api.Session do
+defmodule Detectino.Api.Session do
   @moduledoc false
 
   @otp_app :detectino_panel

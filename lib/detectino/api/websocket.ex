@@ -1,4 +1,4 @@
-defmodule DetectinoPanel.Api.Websocket do
+defmodule Detectino.Api.Websocket do
   @moduledoc false
   alias Phoenix.Channels.GenSocketClient
 

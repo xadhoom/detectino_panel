@@ -1,8 +1,8 @@
-defmodule DetectinoPanel.Api.Supervisor do
+defmodule Detectino.Api.Supervisor do
   @moduledoc false
   use Supervisor
 
-  alias DetectinoPanel.Api.AuthWorker
+  alias Detectino.Api.AuthWorker
 
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
@@ -15,7 +15,7 @@ defmodule DetectinoPanel.Api.Supervisor do
   end
 
   def start_websocket(args) do
-    alias DetectinoPanel.Api.Websocket
+    alias Detectino.Api.Websocket
 
     {Websocket, args}
     |> start_child()

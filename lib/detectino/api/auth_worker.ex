@@ -1,12 +1,12 @@
-defmodule DetectinoPanel.Api.AuthWorker do
+defmodule Detectino.Api.AuthWorker do
   @moduledoc """
   Performs logins and keeps token refreshed.
   Starts websocket worker via DetectinoPanel.Api.Supervisor.
   """
   use GenServer
 
-  alias DetectinoPanel.Api.{Session, Websocket}
-  alias DetectinoPanel.Api.Supervisor, as: ApiSup
+  alias Detectino.Api.{Session, Websocket}
+  alias Detectino.Api.Supervisor, as: ApiSup
 
   require Logger
 

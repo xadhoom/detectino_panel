@@ -1,4 +1,4 @@
-defmodule DetectinoPanel.Api.Pin do
+defmodule Detectino.Api.Pin do
   @moduledoc false
 
   @otp_app :detectino_panel

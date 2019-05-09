@@ -1,8 +1,8 @@
-defmodule DetectinoPanel.Api.SessionTest do
+defmodule Detectino.Api.SessionTest do
   @moduledoc false
   use ExUnit.Case
 
-  alias DetectinoPanel.Api.Session
+  alias Detectino.Api.Session
   alias Plug.Conn
   alias Plug.Parsers
 

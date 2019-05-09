@@ -1,8 +1,8 @@
-defmodule DetectinoPanel.Api.PinTest do
+defmodule Detectino.Api.PinTest do
   @moduledoc false
   use ExUnit.Case
 
-  alias DetectinoPanel.Api.Pin
+  alias Detectino.Api.Pin
   alias Plug.Conn
   alias Plug.Parsers
 

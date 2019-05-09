@@ -27,7 +27,7 @@ defmodule DetectinoPanel.Application do
 
     [
       supervisor(Scenic, viewports: [main_viewport_config]),
-      supervisor(DetectinoPanel.Api.Supervisor, [[]])
+      supervisor(Detectino.Api.Supervisor, [[]])
     ]
   end
 
@@ -40,7 +40,7 @@ defmodule DetectinoPanel.Application do
         [timeout: 15, brightness: 225, callback: {DetectinoPanel.Scene.Default, :blank}]
       ]),
       supervisor(Scenic, viewports: [main_viewport_config]),
-      supervisor(DetectinoPanel.Api.Supervisor, [[]])
+      supervisor(Detectino.Api.Supervisor, [[]])
     ]
   end
 end
