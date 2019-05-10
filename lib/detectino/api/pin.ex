@@ -5,7 +5,7 @@ defmodule Detectino.Api.Pin do
 
   @api_path "/api/users/check_pin"
 
-  def check_pin(token, pin, opts \\ []) do
+  def check_pin(token, pin, opts \\ []) when is_binary(pin) do
     payload = %{pin: pin}
 
     do_post(@api_path, payload, token, opts)

@@ -22,19 +22,18 @@ defmodule Detectino.Api.PinWorker do
     {:ok, nil}
   end
 
-  def handle_call({:check_pin, pin}, _f, state) do
-    res =
-      AuthWorker.get_token()
-      |> check_pin_impl(pin)
+  def handle_info({:check_pin, pin, caller}, state) do
+    AuthWorker.get_token()
+    |> check_pin_impl(pin, caller)
 
-    {:reply, res, state}
+    {:noreply, state}
   end
 
-  defp check_pin_impl(nil, _pin) do
-    {:error, :unauthorized}
+  defp check_pin_impl(nil, _pin, caller) do
+    send(caller, {:check_pin_response, {:error, :unauthorized}})
   end
 
-  defp check_pin_impl(token, pin) when is_binary(token) do
-    Pin.check_pin(token, pin)
+  defp check_pin_impl(token, pin, caller) when is_binary(token) do
+    send(caller, {:check_pin_response, Pin.check_pin(token, pin)})
   end
 end
