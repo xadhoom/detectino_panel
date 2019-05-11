@@ -44,7 +44,7 @@
   "recon": {:hex, :recon, "2.3.6", "2bcad0cf621fb277cabbb6413159cd3aa30265c2dee42c968697988b30108604", [:rebar3], [], "hexpm"},
   "ring_logger": {:hex, :ring_logger, "0.6.1", "568dbd9eebf26c661427de5204d8a91adaa740993f3ac5aa450257f62b6e7178", [:mix], [], "hexpm"},
   "scenic": {:hex, :scenic, "0.10.2", "f4f0a00eed677ac50a7b297375c0323d03f4273580f17c50b877abfaf0c6dc1f", [:make, :mix], [{:elixir_make, "~> 0.5", [hex: :elixir_make, repo: "hexpm", optional: false]}, {:font_metrics, "~> 0.3", [hex: :font_metrics, repo: "hexpm", optional: false]}], "hexpm"},
-  "scenic_driver_nerves_rpi": {:git, "git@github.com:boydm/scenic_driver_nerves_rpi.git", "91dc3bfe6fc5344cf31887e54ca7f3e5d9fc8deb", [branch: "v0.9.0"]},
+  "scenic_driver_nerves_rpi": {:hex, :scenic_driver_nerves_rpi, "0.10.0", "6aa51e6f026386b5f09a082e54a59f8fcdb7e838437f8d4bdb8fa26c9c77f228", [:make, :mix], [{:elixir_make, "~> 0.5", [hex: :elixir_make, repo: "hexpm", optional: false]}, {:scenic, "~> 0.10", [hex: :scenic, repo: "hexpm", optional: false]}], "hexpm"},
   "scenic_driver_nerves_touch": {:hex, :scenic_driver_nerves_touch, "0.10.0", "853c51ef9f7a86d40fed549e868e0bb66019969eb91d53d72b44bb95b0c8ef97", [:mix], [{:input_event, "~> 0.4", [hex: :input_event, repo: "hexpm", optional: false]}, {:scenic, "~> 0.10", [hex: :scenic, repo: "hexpm", optional: false]}], "hexpm"},
   "scenic_sensor": {:hex, :scenic_sensor, "0.7.0", "a12aed7596fbab025a535f912325da5a087ff704e96f7acb274c3034d832f9ce", [:mix], [], "hexpm"},
   "shoehorn": {:hex, :shoehorn, "0.5.0", "da8e37dbee92454dd8e20c86953de94bdcaddb2dcda6c72cf4a3de5f52e0f322", [:mix], [{:distillery, "~> 2.0", [hex: :distillery, repo: "hexpm", optional: false]}], "hexpm"},

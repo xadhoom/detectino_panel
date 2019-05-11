@@ -83,9 +83,8 @@ defmodule DetectinoPanel.MixProject do
       {:nerves_runtime, "~> 0.6"},
       {:nerves_network, "~> 0.3"},
       {:nerves_firmware_ssh, "~> 0.3"},
-      {:scenic_driver_nerves_rpi,
-       git: "git@github.com:boydm/scenic_driver_nerves_rpi.git", branch: "v0.9.0"},
-      {:scenic_driver_nerves_touch, "~> 0.9"}
+      {:scenic_driver_nerves_rpi, "~> 0.10"},
+      {:scenic_driver_nerves_touch, "~> 0.10"}
     ] ++ system(target)
   end
 
