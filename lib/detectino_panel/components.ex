@@ -14,6 +14,16 @@ defmodule DetectinoPanel.Components do
     modify(p, __MODULE__.Keypad, data, options)
   end
 
+  def pin_error(graph, title, options \\ [])
+
+  def pin_error(%Graph{} = g, data, options) do
+    add_to_graph(g, __MODULE__.PinError, data, options)
+  end
+
+  def pin_error(%Primitive{module: SceneRef} = p, data, options) do
+    modify(p, __MODULE__.PinError, data, options)
+  end
+
   def background(graph, title, options \\ [])
 
   def background(%Graph{} = g, data, options) do

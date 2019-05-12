@@ -2,10 +2,8 @@ defmodule DetectinoPanel.Components.Keypad.Button do
   @moduledoc false
   use Scenic.Component, has_children: false
 
-  alias DetectinoPanel.Scene.Helpers.Screensaver
   alias Scenic.Graph
   alias Scenic.Primitive
-  alias Scenic.ViewPort
 
   import Scenic.Primitives, only: [{:rrect, 3}, {:text, 3}]
 
@@ -44,8 +42,8 @@ defmodule DetectinoPanel.Components.Keypad.Button do
   end
 
   @doc false
-  def handle_input({:cursor_button, {:left, :press, _, _}}, context, state) do
-    Screensaver.signal_screensaver()
+  def handle_input({:cursor_button, {:left, :press, _, _}}, _context, state) do
+    send_event(:app_interaction)
 
     state =
       state
@@ -53,21 +51,19 @@ defmodule DetectinoPanel.Components.Keypad.Button do
 
     g = update_color(state)
 
-    ViewPort.capture_input(context, [:cursor_button, :cursor_pos])
-
     {:noreply, state, push: g}
   end
 
   @doc false
   def handle_input(
         {:cursor_button, {:left, :release, _, _}},
-        context,
+        _context,
         %{pressed: pressed, id: id} = state
       ) do
+    send_event(:app_interaction)
+
     state = Map.put(state, :pressed, false)
     g = update_color(state)
-
-    ViewPort.release_input(context, [:cursor_button, :cursor_pos])
 
     if pressed do
       send_event({:click, id})

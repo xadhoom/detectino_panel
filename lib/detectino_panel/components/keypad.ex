@@ -69,4 +69,8 @@ defmodule DetectinoPanel.Components.Keypad do
     "keypad_" <> id = Atom.to_string(id)
     {:cont, {:keypad_click, String.to_integer(id)}, state}
   end
+
+  def filter_event(:app_interaction = ev, _from, state) do
+    {:cont, ev, state}
+  end
 end

@@ -3,25 +3,32 @@ defmodule DetectinoPanel.Scene.Default do
   use Scenic.Scene
 
   alias DetectinoPanel.Components, as: MyComponents
-  alias Scenic.{Graph, Scene, ViewPort}
+  alias Scenic.{Graph, ViewPort}
 
   require Logger
 
   @graph Graph.build()
          |> MyComponents.background([], id: :background)
-         |> MyComponents.pin_input([], id: :pin_input)
 
-  def blank(:off) do
-    {:ok, %{root_graph: ref}} = ViewPort.info(:main_viewport)
-    Scene.cast(ref, {:blank})
+  defmodule State do
+    @moduledoc false
+    defstruct graph: nil, blanked: false
   end
 
-  def blank(_) do
-    :ok
-  end
+  def init(opts, _) do
+    blanked? = Keyword.get(opts, :blanked, false)
 
-  def init(_, _) do
-    {:ok, %{graph: @graph}, push: @graph}
+    g =
+      case blanked? do
+        false ->
+          @graph
+
+        true ->
+          Graph.build()
+          |> MyComponents.blank([], id: :blank)
+      end
+
+    {:ok, %State{graph: g, blanked: blanked?}, push: g}
   end
 
   def handle_cast({:blank}, state) do
@@ -36,9 +43,9 @@ defmodule DetectinoPanel.Scene.Default do
     {:halt, %{state | graph: @graph}, push: @graph}
   end
 
-  def filter_event({:keypad_click, :confirm, pin}, _, state) do
-    Logger.info("Inserted PIN: #{pin}")
+  def filter_event({:background_click}, _, state) do
+    ViewPort.set_root(:main_viewport, {DetectinoPanel.Scene.Main, nil})
 
-    {:halt, %{state | graph: @graph}, push: @graph}
+    {:halt, state}
   end
 end

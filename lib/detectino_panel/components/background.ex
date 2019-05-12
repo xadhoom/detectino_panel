@@ -40,4 +40,20 @@ defmodule DetectinoPanel.Components.Background do
 
     {:ok, @graph, push: @graph}
   end
+
+  @doc false
+  def handle_input(
+        {:cursor_button, {:left, :release, _, _}},
+        _context,
+        state
+      ) do
+    send_event({:background_click})
+
+    {:noreply, state}
+  end
+
+  @doc false
+  def handle_input(_event, _context, state) do
+    {:noreply, state}
+  end
 end

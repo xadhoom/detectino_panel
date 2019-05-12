@@ -6,7 +6,7 @@ config :logger,
 
 config :detectino_panel, :viewport, %{
   name: :main_viewport,
-  default_scene: {DetectinoPanel.Scene.Default, nil},
+  default_scene: {DetectinoPanel.Scene.Default, []},
   size: {800, 480},
   opts: [scale: 1.0],
   drivers: [
@@ -29,15 +29,19 @@ config :nerves_network,
 
 config :nerves_network, :default,
   wlan0: [
-    ssid: "YOUR-AP",
-    psk: "greatpsk",
-    key_mgmt: String.to_atom("WPA-PSK"),
-    proto: :RSN,
-    ipv4_address_method: :static,
-    ipv4_address: "192.168.1.42",
-    ipv4_subnet_mask: "255.255.255.0",
-    # ipv4_gateway: "192.168.10.254",
-    nameservers: ["192.168.1.1"]
+    networks: [
+      [
+        ssid: "YOUR-AP",
+        psk: "greatpsk",
+        key_mgmt: String.to_atom("WPA-PSK"),
+        proto: :RSN,
+        ipv4_address_method: :static,
+        ipv4_address: "192.168.1.42",
+        ipv4_subnet_mask: "255.255.255.0",
+        # ipv4_gateway: "192.168.10.254",
+        nameservers: ["192.168.1.1"]
+      ]
+    ]
   ]
 
 # nerves ssh stuff

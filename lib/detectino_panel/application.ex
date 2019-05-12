@@ -37,7 +37,11 @@ defmodule DetectinoPanel.Application do
 
     [
       worker(RpiBacklight.AutoDimmer, [
-        [timeout: 15, brightness: 225, callback: {DetectinoPanel.Scene.Default, :blank}]
+        [
+          timeout: 15,
+          brightness: 225,
+          callback: {DetectinoPanel.Scene.Helpers.Screensaver, :blank}
+        ]
       ]),
       supervisor(Scenic, viewports: [main_viewport_config]),
       supervisor(Detectino.Api.Supervisor, [[]])

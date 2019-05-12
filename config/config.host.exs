@@ -2,7 +2,7 @@ use Mix.Config
 
 config :detectino_panel, :viewport, %{
   name: :main_viewport,
-  default_scene: {DetectinoPanel.Scene.Default, nil},
+  default_scene: {DetectinoPanel.Scene.Default, []},
   size: {800, 480},
   opts: [scale: 1.0],
   drivers: [

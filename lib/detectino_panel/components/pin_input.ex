@@ -48,6 +48,10 @@ defmodule DetectinoPanel.Components.PinInput do
     end
   end
 
+  def filter_event({:keypad_click, :confirm} = _ev, _, %{selection: ""} = state) do
+    {:halt, state}
+  end
+
   def filter_event({:keypad_click, :confirm} = _ev, _, %{selection: sel} = state) do
     Logger.debug(sel)
 
