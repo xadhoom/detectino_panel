@@ -1,5 +1,6 @@
 defmodule Detectino.Api.Websocket do
   @moduledoc false
+  alias Detectino.Api.Events
   alias Phoenix.Channels.GenSocketClient
 
   require Logger
@@ -104,8 +105,10 @@ defmodule Detectino.Api.Websocket do
   end
 
   @doc false
-  def handle_message("timer:time", _event, _payload, _transport, state) do
+  def handle_message("timer:time", _event, %{"time" => time}, _transport, state) do
     # Logger.debug("Timer event: #{inspect(payload)}")
+    naive = Timex.parse!(time, "{ISO:Extended}")
+    Events.dispatch_async(:timer, naive)
 
     {:ok, state}
   end
