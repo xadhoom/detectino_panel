@@ -62,6 +62,7 @@ defmodule DetectinoPanel.MixProject do
       {:phoenix_gen_socket_client, "~> 2.1"},
       {:websocket_client, "~> 1.3"},
       {:poison, "~> 3.0"},
+      {:timex, "~> 3.5"},
       # dev and debug stuff
       {:observer_cli, "~> 1.4"},
       {:bypass, "~> 1.0", only: :test},
