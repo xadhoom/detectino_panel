@@ -24,7 +24,8 @@ defmodule Detectino.Api.Supervisor do
   @impl true
   def init(_args) do
     children = [
-      {Registry, keys: :unique, name: Registry.DetectinoApi},
+      # {Registry, keys: :unique, name: Registry.DetectinoApi},
+      # {Registry, keys: :duplicate, name: Registry.DetectinoEvents},
       {AuthWorker, []},
       {PinWorker, []}
     ]

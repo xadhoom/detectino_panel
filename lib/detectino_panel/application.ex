@@ -5,6 +5,7 @@ defmodule DetectinoPanel.Application do
   @target Mix.Project.config()[:target]
 
   use Application
+  import Supervisor.Spec
 
   def start(_type, _args) do
     opts = [strategy: :one_for_one, name: DetectinoPanel.Supervisor]
@@ -22,19 +23,10 @@ defmodule DetectinoPanel.Application do
   end
 
   def children("host", _) do
-    import Supervisor.Spec
-    main_viewport_config = Application.get_env(:detectino_panel, :viewport)
-
-    [
-      supervisor(Scenic, viewports: [main_viewport_config]),
-      supervisor(Detectino.Api.Supervisor, [[]])
-    ]
+    common_children()
   end
 
   def children(_target, _env) do
-    import Supervisor.Spec, warn: false
-    main_viewport_config = Application.get_env(:detectino_panel, :viewport)
-
     [
       worker(RpiBacklight.AutoDimmer, [
         [
@@ -42,9 +34,18 @@ defmodule DetectinoPanel.Application do
           brightness: 225,
           callback: {DetectinoPanel.Scene.Helpers.Screensaver, :blank}
         ]
-      ]),
-      supervisor(Scenic, viewports: [main_viewport_config]),
-      supervisor(Detectino.Api.Supervisor, [[]])
+      ])
+    ] ++ common_children()
+  end
+
+  defp common_children do
+    main_viewport_config = Application.get_env(:detectino_panel, :viewport)
+
+    [
+      {Registry, keys: :unique, name: Registry.DetectinoApi},
+      {Registry, keys: :duplicate, name: Registry.DetectinoEvents},
+      supervisor(Detectino.Api.Supervisor, [[]]),
+      supervisor(Scenic, viewports: [main_viewport_config])
     ]
   end
 end
