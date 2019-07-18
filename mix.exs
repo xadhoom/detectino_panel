@@ -2,16 +2,17 @@ defmodule DetectinoPanel.MixProject do
   @moduledoc false
   use Mix.Project
 
+  @otp_app :detectino_panel
   @target System.get_env("MIX_TARGET") || "host"
 
   def project do
     [
-      app: :detectino_panel,
+      app: @otp_app,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       target: @target,
-      archives: [nerves_bootstrap: "~> 1.0"],
+      archives: [nerves_bootstrap: "~> 1.6"],
       deps_path: "deps/#{@target}",
       build_path: "_build/#{@target}",
       lockfile: "mix.lock.#{@target}",
@@ -19,13 +20,24 @@ defmodule DetectinoPanel.MixProject do
       build_embedded: true,
       aliases: [loadconfig: [&bootstrap/1]],
       deps: deps(),
+      releases: [{@otp_app, release()}],
       test_coverage: [tool: ExCoveralls],
+      preferred_cli_target: [run: :host, test: :host],
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
       ]
+    ]
+  end
+
+  def release do
+    [
+      overwrite: true,
+      cookie: "#{@otp_app}_cookie",
+      include_erts: &Nerves.Release.erts/0,
+      steps: [&Nerves.Release.init/1, :assemble]
     ]
   end
 
@@ -51,8 +63,8 @@ defmodule DetectinoPanel.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:nerves, "~> 1.3", runtime: false},
-      {:shoehorn, "~> 0.4"},
+      {:nerves, "~> 1.5", runtime: false},
+      {:shoehorn, "~> 0.6"},
       {:ring_logger, "~> 0.5"},
       {:scenic, "~> 0.9"},
       {:scenic_sensor, "~> 0.7"},
@@ -89,7 +101,7 @@ defmodule DetectinoPanel.MixProject do
     ] ++ system(target)
   end
 
-  defp system("rpi3"), do: [{:nerves_system_rpi3, "~> 1.5", runtime: false}]
+  defp system("rpi3"), do: [{:nerves_system_rpi3, "~> 1.8", runtime: false}]
 
   defp system(target), do: Mix.raise("Unknown MIX_TARGET: #{target}")
 end
