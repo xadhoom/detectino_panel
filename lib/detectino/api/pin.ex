@@ -23,7 +23,11 @@ defmodule Detectino.Api.Pin do
     |> parse_response()
   end
 
-  defp parse_response({:ok, %{status_code: 200}}), do: :ok
+  defp parse_response({:ok, %{status_code: 200, body: body}}) do
+    data = Jason.decode!(body)
+    {:ok, Map.get(data, "expire", 0)}
+  end
+
   defp parse_response({:ok, %{status_code: 400}}), do: {:error, :invalid}
   defp parse_response({:ok, %{status_code: 401}}), do: {:error, :unauthorized}
   defp parse_response({:ok, %{status_code: 404}}), do: {:error, :unauthorized}
