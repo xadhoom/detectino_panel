@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :detectino_panel, :viewport, %{
   name: :main_viewport,
