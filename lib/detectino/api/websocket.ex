@@ -106,7 +106,7 @@ defmodule Detectino.Api.Websocket do
 
   @doc false
   def handle_message("timer:time", _event, %{"time" => time}, _transport, state) do
-    # Logger.debug("Timer event: #{inspect(payload)}")
+    # Logger.debug("Timer event: #{inspect(time)}")
     naive = Timex.parse!(time, "{ISO:Extended}")
     Events.dispatch_async(:timer, naive)
 
