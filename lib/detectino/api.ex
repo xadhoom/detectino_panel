@@ -2,6 +2,7 @@ defmodule Detectino.Api do
   @moduledoc """
   APIs entry point for interaction with detectino server from panel
   """
+  alias Detectino.Api.{AuthWorker, PinWorker, Scenario}
 
   @doc """
   Performs a pin check to detectino server, asyncronously.
@@ -18,6 +19,11 @@ defmodule Detectino.Api do
       {:error, :not_found} ->
         {:error, :unauthorized}
     end
+  end
+
+  def get_scenarios do
+    {AuthWorker.get_token(), PinWorker.get_pin()}
+    |> Scenario.get_available()
   end
 
   defp get_pin_worker do
