@@ -1,5 +1,7 @@
-defmodule DetectinoPanel.Scene.Main do
-  @moduledoc false
+defmodule DetectinoPanel.Scene.Active.Main do
+  @moduledoc """
+             Main ViewPort to be shown when fully authed
+             """ && false
   use Scenic.Scene
 
   alias Detectino.Api
@@ -7,11 +9,18 @@ defmodule DetectinoPanel.Scene.Main do
   alias DetectinoPanel.Scene.Helpers.Screensaver
   alias Scenic.{Graph, Scene, ViewPort}
 
+  import Scenic.Primitives, only: [{:rect, 3}]
+
   require Logger
 
-  @graph Graph.build()
-         |> MyComponents.background([], id: :background)
-         |> MyComponents.pin_input([], id: :pin_input)
+  @def_graph Graph.build()
+             |> rect({800, 480}, fill: :light_gray)
+             |> MyComponents.top_bar([], id: :top_bar)
+
+  @graph @def_graph
+         |> MyComponents.intrusion_menu([], id: :intrusion_menu)
+
+  @idle_timeout 15_000
 
   def blank(:off) do
     {:ok, %{root_graph: ref}} = ViewPort.info(:main_viewport)
@@ -43,48 +52,14 @@ defmodule DetectinoPanel.Scene.Main do
     {:noreply, %{state | graph: g, blanked: true}, push: g}
   end
 
-  def handle_info(:idle, %{blanked: true} = state) do
-    ViewPort.set_root(:main_viewport, {DetectinoPanel.Scene.Default, blanked: true})
-
-    {:noreply, state}
-  end
-
-  def handle_info(:idle, %{blanked: false} = state) do
-    ViewPort.set_root(:main_viewport, {DetectinoPanel.Scene.Default, blanked: false})
-
-    {:noreply, state}
-  end
-
-  def handle_info({:check_pin_response, {:error, _}}, state) do
-    g =
-      Graph.build()
-      |> MyComponents.pin_error([])
-
-    state =
-      %{state | graph: g}
-      |> schedule_idle()
-
-    {:noreply, state, push: g}
-  end
-
-  def handle_info({:check_pin_response, :ok}, state) do
-    # Api.get_scenarios() |> IO.inspect()
-
-    ViewPort.set_root(:main_viewport, {DetectinoPanel.Scene.Active.Main, blanked: false})
+  def handle_info(:idle, %{blanked: blanked} = state) when is_boolean(blanked) do
+    ViewPort.set_root(:main_viewport, {DetectinoPanel.Scene.Default, blanked: blanked})
 
     {:noreply, state}
   end
 
   def filter_event({:blank_click}, _, state) do
     {:halt, %{state | graph: @graph, blanked: false}, push: @graph}
-  end
-
-  def filter_event({:keypad_click, :confirm, pin}, _, state) do
-    Logger.info("Inserted PIN: #{pin}")
-
-    Api.check_pin(pin)
-
-    {:halt, %{state | graph: @graph}, push: @graph}
   end
 
   def filter_event({:background_click}, _, state) do
@@ -101,13 +76,22 @@ defmodule DetectinoPanel.Scene.Main do
     {:halt, state}
   end
 
+  def filter_event({:open_section, module}, _from, state) do
+    g =
+      @def_graph
+      |> MyComponents.add_module(module, [], translate: {0, 80})
+
+    {:halt, %{state | graph: g}, push: g}
+  end
+
   defp schedule_idle(%{idle_timer: nil} = state) do
-    tref = Process.send_after(self(), :idle, 5000)
+    tref = Process.send_after(self(), :idle, @idle_timeout)
 
     %{state | idle_timer: tref}
   end
 
   defp schedule_idle(%{idle_timer: tref} = state) when is_reference(tref) do
+    IO.inspect(:rescheduling)
     Process.cancel_timer(tref)
 
     schedule_idle(%{state | idle_timer: nil})

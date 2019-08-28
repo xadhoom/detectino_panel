@@ -54,6 +54,12 @@ defmodule DetectinoPanel.Components do
     modify(p, __MODULE__.Blank, data, options)
   end
 
+  def add_module(graph, module, data \\ [], options \\ [])
+
+  def add_module(%Graph{} = g, module, data, options) do
+    add_to_graph(g, module, data, options)
+  end
+
   def add_to_graph(%Graph{} = g, mod, data, options) do
     mod.verify!(data)
     mod.add_to_graph(g, data, options)
@@ -62,5 +68,29 @@ defmodule DetectinoPanel.Components do
   def modify(%Primitive{module: SceneRef} = p, mod, data, options) do
     mod.verify!(data)
     Primitive.put(p, {mod, data}, options)
+  end
+
+  def top_bar(%Graph{} = g, data, options) do
+    add_to_graph(g, __MODULE__.TopBar, data, options)
+  end
+
+  def clock(%Graph{} = g, data, options) do
+    add_to_graph(g, __MODULE__.Clock, data, options)
+  end
+
+  def scenario_button(%Graph{} = g, data, options) do
+    add_to_graph(g, __MODULE__.ScenarioButton, data, options)
+  end
+
+  def lock_button(%Graph{} = g, data, options) do
+    add_to_graph(g, __MODULE__.LockButton, data, options)
+  end
+
+  def event_button(%Graph{} = g, data, options) do
+    add_to_graph(g, __MODULE__.EventButton, data, options)
+  end
+
+  def intrusion_menu(%Graph{} = g, data, options) do
+    add_to_graph(g, __MODULE__.IntrusionMenu, data, options)
   end
 end

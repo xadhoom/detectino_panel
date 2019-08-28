@@ -26,6 +26,23 @@ defmodule Detectino.Api do
     |> Scenario.get_available()
   end
 
+  def async_get_scenarios do
+    Task.async(fn ->
+      get_scenarios()
+    end)
+  end
+
+  def run_scenario(id) do
+    {AuthWorker.get_token(), PinWorker.get_pin()}
+    |> Scenario.run(id)
+  end
+
+  def async_run_scenario(id) do
+    Task.async(fn ->
+      run_scenario(id)
+    end)
+  end
+
   defp get_pin_worker do
     case Registry.lookup(Registry.DetectinoApi, :pin_api) do
       [{pid, _}] -> {:ok, pid}

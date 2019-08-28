@@ -3,6 +3,7 @@ import Config
 config :detectino_panel, :viewport, %{
   name: :main_viewport,
   default_scene: {DetectinoPanel.Scene.Default, []},
+  # default_scene: {DetectinoPanel.Scene.Active.Main, []},
   size: {800, 480},
   opts: [scale: 1.0],
   drivers: [
