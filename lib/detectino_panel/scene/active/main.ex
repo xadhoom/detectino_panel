@@ -37,7 +37,7 @@ defmodule DetectinoPanel.Scene.Active.Main do
 
   defmodule State do
     @moduledoc false
-    defstruct graph: nil, blanked: false, idle_timer: nil
+    defstruct graph: nil, blanked: false, idle_timer: nil, dialog_open: false
   end
 
   def init(_, _) do
@@ -98,7 +98,7 @@ defmodule DetectinoPanel.Scene.Active.Main do
       |> maybe_drop_alert_dialog()
       |> add_alert_dialog(level, msg, autoclose)
 
-    {:halt, %{state | graph: g}, push: g}
+    {:halt, %{state | graph: g, dialog_open: true}, push: g}
   end
 
   def filter_event({:dialog_timeout}, _from, %{graph: g} = state) do
@@ -106,7 +106,7 @@ defmodule DetectinoPanel.Scene.Active.Main do
       g
       |> maybe_drop_alert_dialog()
 
-    {:halt, %{state | graph: g}, push: g}
+    {:halt, %{state | graph: g, dialog_open: false}, push: g}
   end
 
   defp maybe_drop_alert_dialog(graph) do
