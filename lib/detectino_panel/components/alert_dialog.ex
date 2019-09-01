@@ -80,7 +80,7 @@ defmodule DetectinoPanel.Components.AlertDialog do
 
   def init({level, msg, timeout}, _opts) when level in @valid_levels do
     icon_hash = IconsUtils.image_hash(level)
-    Texture.load(IconsUtils.image_path(level), icon_hash)
+    Texture.load(IconsUtils.image_path(level), icon_hash, scope: :global)
 
     g =
       Graph.build()
