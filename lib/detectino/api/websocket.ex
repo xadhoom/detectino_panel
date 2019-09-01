@@ -113,6 +113,38 @@ defmodule Detectino.Api.Websocket do
     {:ok, state}
   end
 
+  def handle_message("event:alarm_events", _, _payload, _transport, state) do
+    {:ok, state}
+  end
+
+  def handle_message("event:alarm", _, _payload, _transport, state) do
+    {:ok, state}
+  end
+
+  def handle_message("event:exit_timer", "start", payload, _transport, state) do
+    Events.dispatch(:exit_timer_start, payload)
+
+    {:ok, state}
+  end
+
+  def handle_message("event:exit_timer", "stop", payload, _transport, state) do
+    Events.dispatch(:exit_timer_stop, payload)
+
+    {:ok, state}
+  end
+
+  def handle_message("event:entry_timer", "start", payload, _transport, state) do
+    Events.dispatch(:entry_timer_start, payload)
+
+    {:ok, state}
+  end
+
+  def handle_message("event:entry_timer", "stop", payload, _transport, state) do
+    Events.dispatch(:exit_timeentry_timer_startr_stop, payload)
+
+    {:ok, state}
+  end
+
   def handle_message(_topic, _event, _payload, _transport, state) do
     # Logger.debug("#{topic} event #{event}: #{inspect(payload)}")
 
