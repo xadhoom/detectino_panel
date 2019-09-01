@@ -44,6 +44,7 @@ defmodule DetectinoPanel.Application do
     [
       {Registry, keys: :unique, name: Registry.DetectinoApi},
       {Registry, keys: :duplicate, name: Registry.DetectinoEvents},
+      {DetectinoPanel.Beeper, []},
       supervisor(Detectino.Api.Supervisor, [[]]),
       supervisor(Scenic, viewports: [main_viewport_config])
     ]
