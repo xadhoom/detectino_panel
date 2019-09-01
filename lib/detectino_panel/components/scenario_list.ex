@@ -30,13 +30,25 @@ defmodule DetectinoPanel.Components.ScenarioList do
     handle_scenarios(scenarios, state)
   end
 
-  def handle_info({ref, :ok}, %{run_ref: run_ref} = state) when ref == run_ref do
-    Logger.debug("Got ok response from run scenario")
+  def handle_info({ref, {:error, err}}, %{rq_ref: rq_ref} = state) when ref == rq_ref do
+    messages = ["Cannot fetch!", "Error: #{err}"]
+    send_event({:alert_message, :error, messages, true})
+
     {:noreply, state}
   end
 
-  def handle_info({ref, err}, %{run_ref: run_ref} = state) when ref == run_ref do
+  def handle_info({ref, :ok}, %{run_ref: run_ref} = state) when ref == run_ref do
+    Logger.debug("Got ok response from run scenario")
+    send_event({:alert_message, :info, "Scenario activated!", true})
+
+    {:noreply, state}
+  end
+
+  def handle_info({ref, {:error, err}}, %{run_ref: run_ref} = state) when ref == run_ref do
     Logger.warn("Got err #{inspect(err)} response from run scenario")
+    messages = ["Scenario error:", "#{err}"]
+    send_event({:alert_message, :error, messages, true})
+
     {:noreply, state}
   end
 
