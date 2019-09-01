@@ -21,6 +21,10 @@ defmodule DetectinoPanel.Scene.Active.Main do
          |> MyComponents.intrusion_menu([], id: :intrusion_menu)
 
   @idle_timeout 15_000
+  @dialog_timeout 5_000
+  true = @idle_timeout > @dialog_timeout
+
+  @alert_dialog_id :alert_dialog
 
   def blank(:off) do
     {:ok, %{root_graph: ref}} = ViewPort.info(:main_viewport)
@@ -82,6 +86,46 @@ defmodule DetectinoPanel.Scene.Active.Main do
       |> MyComponents.add_module(module, [], translate: {0, 80})
 
     {:halt, %{state | graph: g}, push: g}
+  end
+
+  def filter_event({:alert_message, level, msg}, from, state) do
+    filter_event({:alert_message, level, msg, true}, from, state)
+  end
+
+  def filter_event({:alert_message, level, msg, autoclose}, _from, %{graph: g} = state) do
+    g =
+      g
+      |> maybe_drop_alert_dialog()
+      |> add_alert_dialog(level, msg, autoclose)
+
+    {:halt, %{state | graph: g}, push: g}
+  end
+
+  def filter_event({:dialog_timeout}, _from, %{graph: g} = state) do
+    g =
+      g
+      |> maybe_drop_alert_dialog()
+
+    {:halt, %{state | graph: g}, push: g}
+  end
+
+  defp maybe_drop_alert_dialog(graph) do
+    graph
+    |> Graph.delete(@alert_dialog_id)
+  end
+
+  defp add_alert_dialog(graph, level, msg, autoclose) when is_boolean(autoclose) do
+    alias DetectinoPanel.Components.AlertDialog
+
+    timeout =
+      case autoclose do
+        true -> @dialog_timeout
+        false -> false
+      end
+
+    graph
+    |> Graph.delete(:alert_dialog)
+    |> MyComponents.add_module(AlertDialog, {level, msg, timeout}, id: @alert_dialog_id)
   end
 
   defp schedule_idle(%{idle_timer: nil} = state) do
